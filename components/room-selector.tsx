@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { createClient } from "@/lib/supabase/client"
+import { EightBallIcon } from "@/components/eight-ball-icon"
 import { Grid3X3, Circle, Anchor, Users, Gamepad2, ArrowLeft } from "lucide-react"
 
-type GameType = "tictactoe" | "connectfour" | "battleship"
+type GameType = "tictactoe" | "connectfour" | "battleship" | "billiard"
 
 interface RoomSelectorProps {
   roomId: string
@@ -25,6 +26,7 @@ interface AllCounts {
   tictactoe: GameCounts
   connectfour: GameCounts
   battleship: GameCounts
+  billiard: GameCounts
 }
 
 export function RoomSelector({ roomId, onSelectGame, onBack }: RoomSelectorProps) {
@@ -32,6 +34,7 @@ export function RoomSelector({ roomId, onSelectGame, onBack }: RoomSelectorProps
     tictactoe: { waiting: 0, playing: 0 },
     connectfour: { waiting: 0, playing: 0 },
     battleship: { waiting: 0, playing: 0 },
+    billiard: { waiting: 0, playing: 0 },
   })
   const supabase = createClient()
 
@@ -54,6 +57,7 @@ export function RoomSelector({ roomId, onSelectGame, onBack }: RoomSelectorProps
         tictactoe: { waiting: 0, playing: 0 },
         connectfour: { waiting: 0, playing: 0 },
         battleship: { waiting: 0, playing: 0 },
+        billiard: { waiting: 0, playing: 0 },
       }
 
       if (queueData) {
@@ -117,8 +121,8 @@ export function RoomSelector({ roomId, onSelectGame, onBack }: RoomSelectorProps
     }
   }, [roomId, supabase])
 
-  const totalWaiting = counts.tictactoe.waiting + counts.connectfour.waiting + counts.battleship.waiting
-  const totalPlaying = (counts.tictactoe.playing + counts.connectfour.playing + counts.battleship.playing) * 2
+  const totalWaiting = counts.tictactoe.waiting + counts.connectfour.waiting + counts.battleship.waiting + counts.billiard.waiting
+  const totalPlaying = (counts.tictactoe.playing + counts.connectfour.playing + counts.battleship.playing + counts.billiard.playing) * 2
 
   const games = [
     {
@@ -142,6 +146,11 @@ export function RoomSelector({ roomId, onSelectGame, onBack }: RoomSelectorProps
       type: "battleship" as GameType,
       name: "Schiffe Versenken",
       icon: <Anchor className="h-8 w-8 text-sky-500" />,
+    },
+    {
+      type: "billiard" as GameType,
+      name: "Billiards",
+      icon: <EightBallIcon className="h-8 w-8" />,
     },
   ]
 

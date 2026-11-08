@@ -8,9 +8,10 @@ import { createClient } from "@/lib/supabase/client"
 import { generatePlayerId, generateGameCode } from "@/lib/game-utils"
 import { createEmptyBoard as createConnectFourBoard } from "@/lib/connect-four-utils"
 import { createEmptyBoard as createBattleshipBoard } from "@/lib/battleship-utils"
+import { createInitialState as createBilliardState } from "@/lib/billiard-rules"
 import { ArrowLeft, Loader2 } from "lucide-react"
 
-type GameType = "tictactoe" | "connectfour" | "battleship"
+type GameType = "tictactoe" | "connectfour" | "battleship" | "billiard"
 
 interface MatchmakingQueueProps {
   roomId: string
@@ -24,6 +25,7 @@ const gameNames: Record<GameType, string> = {
   tictactoe: "Tic Tac Toe",
   connectfour: "Vier Gewinnt",
   battleship: "Schiffe Versenken",
+  billiard: "Billiards",
 }
 
 export function MatchmakingQueue({ roomId, gameType, username, onBack, onMatchFound }: MatchmakingQueueProps) {
@@ -41,8 +43,10 @@ export function MatchmakingQueue({ roomId, gameType, username, onBack, onMatchFo
       board = ["", "", "", "", "", "", "", "", ""]
     } else if (gameType === "connectfour") {
       board = createConnectFourBoard()
-    } else {
+    } else if (gameType === "battleship") {
       board = createBattleshipBoard()
+    } else {
+      board = []
     }
 
     const { data, error } = await supabase
@@ -59,6 +63,7 @@ export function MatchmakingQueue({ roomId, gameType, username, onBack, onMatchFo
         current_turn: "X",
         round_starter: "X",
         room_id: roomId,
+        ...(gameType === "billiard" ? { billiard_state: createBilliardState(), last_shot: null } : {}),
       })
       .select()
       .single()
