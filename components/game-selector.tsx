@@ -6,13 +6,15 @@ import { Button } from "@/components/ui/button"
 import { TicTacToeGame } from "@/components/tic-tac-toe-game"
 import { ConnectFourGame } from "@/components/connect-four-game"
 import { BattleshipGame } from "@/components/battleship-game"
+import { BilliardGame } from "@/components/billiard-game"
+import { EightBallIcon } from "@/components/eight-ball-icon"
 import { RoomSelector } from "@/components/room-selector"
 import { MatchmakingQueue } from "@/components/matchmaking-queue"
 import { UsernameInput } from "@/components/username-input"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Grid3X3, Circle, Anchor, User, Pencil } from "lucide-react"
 
-type GameType = "tictactoe" | "connectfour" | "battleship"
+type GameType = "tictactoe" | "connectfour" | "battleship" | "billiard"
 type Mode = "rooms" | "manual"
 type Screen = "mode-select" | "room-select" | "matchmaking" | "manual-select" | "playing"
 
@@ -56,6 +58,9 @@ export function GameSelector() {
     if (state.gameType === "battleship") {
       return <BattleshipGame onBack={handleBack} initialGameId={state.gameId} username={state.username} />
     }
+    if (state.gameType === "billiard") {
+      return <BilliardGame onBack={handleBack} initialGameId={state.gameId} username={state.username} />
+    }
   }
 
   // Manual mode - original game selection
@@ -68,6 +73,9 @@ export function GameSelector() {
     }
     if (state.gameType === "battleship") {
       return <BattleshipGame onBack={() => setState({ ...state, screen: "manual-select", gameType: null })} username={state.username} />
+    }
+    if (state.gameType === "billiard") {
+      return <BilliardGame onBack={() => setState({ ...state, screen: "manual-select", gameType: null })} username={state.username} />
     }
 
     // Manual game selection menu
@@ -118,6 +126,15 @@ export function GameSelector() {
             >
               <Anchor className="h-8 w-8 text-sky-500" />
               <span className="text-lg font-medium">Schiffe Versenken</span>
+            </Button>
+
+            <Button
+              variant="outline"
+              className="h-24 flex flex-col gap-2"
+              onClick={() => setState({ ...state, gameType: "billiard" })}
+            >
+              <EightBallIcon className="h-8 w-8" />
+              <span className="text-lg font-medium">Billiards</span>
             </Button>
           </CardContent>
         </Card>
